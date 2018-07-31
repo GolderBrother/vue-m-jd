@@ -10,10 +10,10 @@
 		            <input type="text" ref="loginName" name="username" placeholder="请输入用户名" class="user_input" v-model="username"/>
 		        </div>
 		        <div class="_username u_passwd">
-		            <input type="password" ref="loginPwd" name="password" placeholder="请输入密码" class="user_input" v-model="password"/>
+		            <input type="password" ref="loginPwd" @keyup.enter="goLogin" name="password" placeholder="请输入密码" class="user_input" v-model="password"/>
 		        </div>
 		        <div class="login_box">
-		            <a @click="goLogin()" class="btn_login">登录</a>
+		            <a @click="goLogin"  class="btn_login">登录</a>
 		        </div>
 				<div class="go_changePwd_box">
 					<router-link tag="span" to="/changePwd">忘记密码</router-link>

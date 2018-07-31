@@ -211,8 +211,9 @@ module.exports = () => {
         for(let obj in req.body){
             userObj = JSON.parse(obj);
         };
-        userObj.password = common.md5(userObj.password + common.MD5_SUFFXIE);
-        const selectUser = `select * from user where (user_name='${userObj.userName}' and login_password='${userObj.password}')`;
+        // userObj.password = common.md5(userObj.password + common.MD5_SUFFXIE);
+        // const selectUser = `select * from user where (user_name='${userObj.userName}' and login_password='${userObj.password}')`;
+        const selectUser = `select * from user where (user_name='${userObj.userName}')`;
         db.query(selectUser,(err,data) => {
             console.log(data);
             if(err){
@@ -220,7 +221,7 @@ module.exports = () => {
                 res.send({'msg':'服务器出错','status':0}).end();
             }else {
                 if(data.length == 0){
-                    res.send({ 'msg':'用户名或者密码错误','status':'-1' }).end();
+                    res.send({ 'msg':'用户名不存在','status':'-1' }).end();
                 }else{
                     userObj.newPassword = common.md5(userObj.newPassword + common.MD5_SUFFXIE);
                     const updatePwd = `update user set login_password="${userObj.newPassword}" where user_name="${userObj.userName}"`;

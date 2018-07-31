@@ -36,11 +36,14 @@
 		methods:{
 			register(){
 				let _this = this;
-				let reg = /^1[34578][0-9]{9}$/;
+				let phoneReg = /^1[34578][0-9]{9}$/;
+				let userReg = /^(\w){4,10}/g;
 				if(_this.regname ==''){
 					_this.prompt('请输入手机号',_this.$refs.regname);
-				}else if(!reg.test(_this.regname)){
+				}else if(_this.regname.indexOf('1') !== -1 && !phoneReg.test(_this.regname)){
 					_this.prompt('手机号格式不正确',_this.$refs.regname);
+				}else if(!userReg.test(_this.regname)){
+					_this.prompt('用户名格式不正确',_this.$refs.regname);
 				}else {
 					_this.$http.post('/regVerify',{
 						regName:_this.regname,
