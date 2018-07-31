@@ -1,0 +1,44 @@
+<template>
+	<div class="home_n">
+		<nav class="m_nav">
+            <ul>
+                <li class="nav_item" :key="index" v-for="(item,index) in navItem">
+                    <a href="#" class="nav_item_link">
+                        <img v-lazy="item.itemImgUrl" :src="item.itemImgUrl" alt="">                   
+                        <span>{{item.itemText}}</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+	</div>
+</template>
+<script>
+import { navItems } from "./navItem";
+export default {
+  data() {
+    return {
+      navItem: []
+    };
+  },
+  methods: {
+    getDatas() {
+      let _this = this;
+    //   for in 循环第一个值为索引
+    //   for(var item in navItems){
+    //       console.log(navItems[item]);
+    //       navItems[item].itemImgUrl = navItems[item].itemImgUrl.replace('../../','/src/');
+    //       _this.navItem.push(navItems[item]);
+    //   };
+    //   for in循环第一个值为每一项
+      for(var item of navItems){
+          item.itemImgUrl = item.itemImgUrl.replace('../../','../../../');
+          _this.navItem.push(item);
+      };
+      console.log(_this.navItem)
+    }
+  },
+  mounted() {
+    this.getDatas();
+  }
+};
+</script>

@@ -1,0 +1,23 @@
+export const navDatas = [
+    {
+        name:'首页',
+        path:'/home',
+        imgSrc:'../../assets/images/navBottom/n-home.png'
+    },{
+        name:'分类',
+        path:'/catgory',
+        imgSrc:'../../assets/images/navBottom/n-catgory.png'
+    },{
+        name:'搜索',
+        path:'/find',
+        imgSrc:'../../assets/images/navBottom/n-find.png'
+    },{
+        name:'购物车',
+        path:'/cart',
+        imgSrc:'../../assets/images/navBottom/n-cart.png'
+    },{
+        name:'我的',
+        path:'/mine',
+        imgSrc:'../../assets/images/navBottom/n-mine.png'
+    },
+];
