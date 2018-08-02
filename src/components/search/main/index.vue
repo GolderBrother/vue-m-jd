@@ -77,7 +77,7 @@ export default {
         if (event == "") {
           console.log("请输入商品名称");
         } else {
-          const result = _this.$http.get("/search", {
+          let result = await _this.$http.get("/search", {
             params: {
               kw: event,
               hot: "",
@@ -86,7 +86,7 @@ export default {
             }
           });
           if (result && result.data) {
-            _this.mDatas = res.data;
+            _this.mDatas = result.data;
           }
         }
       } catch (error) {
@@ -171,3 +171,7 @@ export default {
   }
 };
 </script>
+<style scoped>
+@import "./index.css";
+</style>
+

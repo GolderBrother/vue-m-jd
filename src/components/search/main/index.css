@@ -1,0 +1,16 @@
+.clear-input{
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    margin-top: -14px;
+}
+.search{
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 8px;
+    background-color: #f60;
+    margin: 3px;
+    color: #fff;
+    border-radius: 10px;
+}

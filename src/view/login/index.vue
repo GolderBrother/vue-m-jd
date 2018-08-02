@@ -26,72 +26,76 @@
 	</div>
 </template>
 <script>
-	import { Message } from 'element-ui';
-	export default{
-		data(){
-			return{
-				username:'',
-				password:'',
-				userInfo:{}
-			}
-		},
-		methods:{
-			goLogin(){
-				let _this = this;
-				if(this.username ==''){
+import { Message } from 'element-ui';
+export default{
+	data(){
+		return {
+			username:'',
+			password:'',
+			userInfo:{}
+		}
+	},
+	methods:{
+		async goLogin(){
+			const _this = this;
+			try {
+				if(_this.username ==''){
 					_this.prompt("请输入用户名",_this.$refs.loginName);
-				}else if(this.password ==''){
-					_this.prompt("请输入密码",_this.$refs.loginPwd);
-				}else {
-					this.$http.post('/login',{
-						loginName:this.username,
-						loginPawd:this.password
-					}).then((res)=>{
-						if(res.status==200){
-							this.userInfo = res.data;
-							if(this.userInfo.status ==1){
-								window.sessionStorage.userInfo = JSON.stringify(this.userInfo);
-								_this.loginSuccess();
-								this.$router.push('/');
-							}else{
-								_this.prompt(this.userInfo.msg,_this.$refs.loginName);
-							}
-						}else {
-							alert('请求错误');
-						}
-					},(err)=>{
-						console.log(err);
-					})
+					return;
 				}
-			},
-			loginSuccess() {
-				let _this = this;
-				this.$message({
-					showClose: true,
-					message: '登陆成功！',
-					type: 'success',
-					duration:'2000',
-					onClose(){
+				if(_this.password ==''){
+					_this.prompt("请输入密码",_this.$refs.loginPwd);
+					return;
+				}
+				let res = await _this.$http.post('/login',{
+					loginName:_this.username,
+					loginPawd:_this.password
+				});
+				if(res.status==200){
+					_this.userInfo = res.data;
+					if(_this.userInfo.status ==1){
+						window.sessionStorage.userInfo = JSON.stringify(_this.userInfo);
+						_this.loginSuccess();
 						_this.$router.push('/');
+					}else{
+						_this.prompt(_this.userInfo.msg,_this.$refs.loginName);
 					}
-				});
-			},
-			prompt(msg,field) {
-				let _this = this;
-				this.$alert(msg, 'err', {
-					confirmButtonText: '确定',
-					callback: action => {
-						// this.$message({
-						// type: 'info',
-						// message: `action: ${ action }`
-						// });
-						field.focus();
-						// field.parentNode.style.borderColor='red';
-					}
-				});
+				}else {
+					alert('请求错误');
+				}
+			} catch (error) {
+				console.log(error)
 			}
+			
+		},
+		loginSuccess() {
+			let _this = this;
+			this.$message({
+				showClose: true,
+				message: '登陆成功！',
+				type: 'success',
+				duration:'2000',
+				onClose(){
+					_this.$router.push('/');
+				}
+			});
+		},
+		prompt(msg,field) {
+			let _this = this;
+			this.$alert(msg, 'err', {
+				confirmButtonText: '确定',
+				callback: action => {
+					// this.$message({
+					// type: 'info',
+					// message: `action: ${ action }`
+					// });
+					field.focus();
+					// field.parentNode.style.borderColor='red';
+				}
+			});
 		}
 	}
+}
 </script>
 <style>
 @import '../../assets/css/login.css';

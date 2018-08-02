@@ -1,16 +1,16 @@
 <template>
 	<div class="home_h">
 		 <header class="m_header">
-                <div class="m_header_box" id="my_search">
-                    <a href="#" @click="goIndex" class="icon_logo"></a>
-                    <form action="#">
-                        <span class="icon_search" @click="goSearch($event)"></span>
-                        <input type="search" ref="search" @focus="goSearch($event)" class="search" placeholder="点击搜索">
-                    </form>
-                    <router-link :to="userDo.path" v-show="userDo.path" class="logo_btn">{{ userDo.text }}</router-link>
-                    <span @click="logout" v-show="!userDo.path" class="logo_btn">{{ userDo.text }}</span>
-                </div>
-            </header>
+        <div class="m_header_box" id="my_search">
+            <a href="#" @click="goIndex" class="icon_logo"></a>
+            <form action="#">
+                <span class="icon_search" @click="goSearch($event)"></span>
+                <input type="search" ref="search" @focus="goSearch($event)" class="search" placeholder="点击搜索">
+            </form>
+            <router-link :to="userDo.path" v-show="userDo.path" class="logo_btn">{{ userDo.text }}</router-link>
+            <span @click="logout" v-show="!userDo.path" class="logo_btn">{{ userDo.text }}</span>
+        </div>
+    </header>
 	</div>
 </template>
 <script>
@@ -91,7 +91,7 @@ export default {
       };
     },
     goIndex() {
-      this.$router.push("/");
+      this.$router.back("-1");
     }
   },
   mounted() {

@@ -23,99 +23,101 @@
 	</div>
 </template>
 <script>
-	import { Message } from 'element-ui';
-	export default{
-		data(){
-			return{
-				regname:'',
-				regpasswd:'',
-				regpasswd_ag:'',
-				regInfo:{}
-			}
-		},
-		methods:{
-			register(){
-				let _this = this;
-				let phoneReg = /^1[34578][0-9]{9}$/;
-				let userReg = /^(\w){4,10}/g;
-				if(_this.regname ==''){
-					_this.prompt('请输入手机号',_this.$refs.regname);
-				}else if(_this.regname.indexOf('1') !== -1 && !phoneReg.test(_this.regname)){
-					_this.prompt('手机号格式不正确',_this.$refs.regname);
-				}else if(!userReg.test(_this.regname)){
-					_this.prompt('用户名格式不正确',_this.$refs.regname);
-				}else {
-					_this.$http.post('/regVerify',{
-						regName:_this.regname,
-					}).then((res)=>{
-						if(res.status == 200 ){
-							console.log(res.data);
-							if(res.data.status == 0){
-								console.log(res.data);
-								_this.prompt('用户名(手机号)已注册！',_this.$refs.regname);
-								_this.$refs.regname.value = '';
-							}else{
-								if(_this.regpasswd == '' || _this.regpasswd_ag == ''){
-									_this.prompt('请输入密码',_this.$refs.regpasswd);
-								}else if(_this.regpasswd!==_this.regpasswd_ag){
-									_this.prompt('两次输入的密码不一致',_this.$refs.regpasswd_ag);
-								}else{
-									_this.$http.post('/reg',{
-										regName:_this.regname,
-										regPasswd:_this.regpasswd
-								}).then((res)=>{
-									if(res.status == 200){
-										_this.regInfo = res.data;
-										if(_this.regInfo.status == 1){
-											//reg success, go to this login page
-											_this.regSuccess();
-											// window.history.go(-1);
-										}else{
-											alert('注册失败');
-										}
-									}else{
-										alert('出现错误');
-									}
-									console.log(res);
-								},(err)=>{
-									console.log(err);
-								});
-								}
-							}
-						}
-					},(err) => {
-						console.log(err);
-					});
-				}; 
-			},
-			regSuccess() {
-				let _this = this;
-				this.$message({
-					showClose: true,
-					message: '恭喜你，注册成功！',
-					type: 'success',
-					onClose(){
-						_this.$router.push('/login');
-					}
-				});
-			},
-			prompt(msg,field) {
-				let _this = this;
-				this.$alert(msg, 'err', {
-					confirmButtonText: '确定',
-					callback: action => {
-						// this.$message({
-						// type: 'info',
-						// message: `action: ${ action }`
-						// });
-						field.focus();
-						// field.parentNode.style.borderColor='red';
-					}
-				});
-			}
-		}
-	}
+import { Message } from "element-ui";
+export default {
+  data() {
+    return {
+      regname: "",
+      regpasswd: "",
+      regpasswd_ag: "",
+      regInfo: {}
+    };
+  },
+  methods: {
+    async register() {
+      const _this = this;
+      const phoneReg = /^1[34578][0-9]{9}$/;
+      const userReg = /^(\w){4,10}/g;
+      const $refname = _this.$refs.regname;
+      if (_this.regname == "") {
+        _this.prompt("请输入用户名/邮箱/手机号", $refname);
+        return;
+      }
+      if (_this.regname.indexOf("1") !== -1 && !phoneReg.test(_this.regname)) {
+        _this.prompt("手机号格式不正确", $refname);
+        return;
+      }
+      if (!userReg.test(_this.regname)) {
+        _this.prompt("用户名格式不正确", $refname);
+        return;
+      }
+      try {
+        let res = await _this.$http.post("/regVerify", {
+          regName: _this.regname
+        });
+        if (res.status == 200 && res.data) {
+          console.log(res.data);
+          if (res.data.status == 0) {
+            console.log(res.data);
+            _this.prompt("用户名(手机号)已注册！", _this.$refs.regname);
+            _this.$refs.regname.value = "";
+            return;
+          }
+          if (_this.regpasswd == "" || _this.regpasswd_ag == "") {
+            _this.prompt("请输入密码", _this.$refs.regpasswd);
+          } else if (_this.regpasswd !== _this.regpasswd_ag) {
+            _this.prompt("两次输入的密码不一致", _this.$refs.regpasswd_ag);
+          } else {
+            let regRes = await _this.$http.post("/reg", {
+              regName: _this.regname,
+              regPasswd: _this.regpasswd
+            });
+            if (regRes.status == 200) {
+              _this.regInfo = regRes.data;
+              if (_this.regInfo.status == 1) {
+                //reg success, go to this login page
+                _this.regSuccess();
+              } else {
+                alert("注册失败");
+              }
+            } else {
+              alert("出现错误");
+            }
+            console.log(regRes);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    regSuccess() {
+      let _this = this;
+      this.$message({
+        showClose: true,
+        message: "恭喜你，注册成功！",
+        type: "success",
+        onClose() {
+          _this.$router.push("/login");
+        }
+      });
+    },
+    prompt(msg, field) {
+      let _this = this;
+      this.$alert(msg, "err", {
+        confirmButtonText: "确定",
+        callback: action => {
+          // this.$message({
+          // type: 'info',
+          // message: `action: ${ action }`
+          // });
+          field.focus();
+          // field.parentNode.style.borderColor='red';
+        }
+      });
+    }
+  }
+};
 </script>
 <style>
-@import '../../assets/css/reg.css';
+@import "../../assets/css/reg.css";
 </style>

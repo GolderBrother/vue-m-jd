@@ -48,7 +48,7 @@ export default {
     async getRightDatas(id) {
       try {
         let _this = this;
-        const result = await _this.$http.get("/categorygoods", {
+        let result = await _this.$http.get("/categorygoods", {
           params: {
             mId: id
           }
@@ -57,7 +57,7 @@ export default {
           _this.RightDatas = result.data;
         }
       } catch (error) {
-        conosle.log(error);
+        console.log(error);
       }
 
       // _this.$http

@@ -36,7 +36,7 @@ export default {
 		}
 	},
 	methods:{
-		changePwd(){
+		async changePwd(){
 			let _this = this;
 			if(_this.userName == ''){
 				_this.prompt('请输入用户名！',_this.$refs.userName);
@@ -49,42 +49,40 @@ export default {
 			if(_this.newpasswd == '' || _this.newpasswd_ag == ''){
 				_this.prompt('请输入新密码！',_this.$refs.newpasswd);
 				return;
-			}else if(_this.newpasswd_ag !=_this.newpasswd ){
+			}else if(_this.newpasswd_ag != _this.newpasswd ){
 				_this.prompt('两次密码输入不一致！',_this.$refs.newpasswd_ag);
 				return
-			}else {
-				// 验证完毕后将用户名和密码重新插入
-				_this.$http.post('/changePwd',{
+			} 
+			// 验证完毕后将用户名和密码重新插入
+			let res = await _this.$http.post('/changePwd',{
 					userName:_this.userName,
 					// password:_this.oldpasswd,
 					newPassword:_this.newpasswd
-				}).then((res) => {
-					console.log(res.data);
-					// 查询原密码是否正确
-					if(res.data.status == 0){
-						// 服务器出错
-						_this.prompt(res.data.msg,_this.$refs.userName);
-						return;
-					}else if(res.data.status == -1){
-						// 用户名不存在
-						_this.prompt(res.data.msg,_this.$refs.userName);
-						return;
-					}else if(res.data.status == -2){
-						// 更改失败，请重新输入新密码
-						_this.prompt(res.data.msg,_this.$refs.newpasswd);
-					}else{
-						// 更改成功
-						_this.$message({
-							type:'success',
-							message:res.data.msg,
-							onClose(){
-								_this.$router.push('/login')
-							}
-						})
-					}
-				},(err) => {
-					console.log(err);
-				})
+				});
+			console.log(res.data);
+			if(res.data){
+				// 查询原密码是否正确
+				if(res.data.status == 0){
+					// 服务器出错
+					_this.prompt(res.data.msg,_this.$refs.userName);
+					return;
+				}else if(res.data.status == -1){
+					// 用户名不存在
+					_this.prompt(res.data.msg,_this.$refs.userName);
+					return;
+				}else if(res.data.status == -2){
+					// 更改失败，请重新输入新密码
+					_this.prompt(res.data.msg,_this.$refs.newpasswd);
+				}else{
+					// 更改成功
+					_this.$message({
+						type:'success',
+						message:res.data.msg,
+						onClose(){
+							_this.$router.push('/login')
+						}
+					})
+				}
 			}
 		},
 		prompt(msg,field){
